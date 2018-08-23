@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BlueToothSkener</string>
+    <string name="my_uuid">00001101-0000-1000-8000-00805F9B34FB</string>
+    <string name="default_kon">Bar-kod čitač nije povezan</string>
+</resources>
