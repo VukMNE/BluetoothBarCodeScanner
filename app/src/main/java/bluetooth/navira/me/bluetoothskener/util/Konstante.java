@@ -13,4 +13,10 @@ public interface Konstante {
     public static final String TOAST = "toast";
     public static final String BT_TAG = "BT27";
 
+    // Constants that indicate the current connection state
+    public static final int STANJE_NULA = 0;       // we're doing nothing
+    public static final int STANJE_SLUŠANJE = 1;     // now listening for incoming connections
+    public static final int STANJE_POVEZIVANJE = 2; // now initiating an outgoing connection
+    public static final int STANJE_POVEZANI = 3;  // now connected to a remote device
+
 }

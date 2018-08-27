@@ -8,7 +8,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -68,6 +70,18 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+
+        boolean noConn = intent.getBooleanExtra("NO_CONN", false);
+        if ( noConn == true) {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                finishAffinity();
+            }
+            else{
+                ActivityCompat.finishAffinity(MainActivity.this);
+            }
+        }
+
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -89,11 +103,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == 1052 && resultCode == 2000){
-
-            this.bluetoothDeviceConnectionState(imaLiKonektovanih());
+            Log.d(Konstante.BT_TAG, "Eve je greška ovđen");
             if(data.getExtras() != null) {
                 konektovaniUređaji = data.getExtras().getStringArray("povezani");
+
+                //Log.d(Konstante.BT_TAG, konektovaniUređaji.toString());
+
             }
+            this.bluetoothDeviceConnectionState(imaLiKonektovanih());
+
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -116,10 +134,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean imaLiKonektovanih(){
-        for(int t = 0; t < konektovaniUređaji.length; t++){
-            if(konektovaniUređaji[t] != null){
-                if(konektovaniUređaji.length > 0 ){
-                    return true;
+        if(konektovaniUređaji != null) {
+            for (int t = 0; t < konektovaniUređaji.length; t++) {
+                if (konektovaniUređaji[t] != null) {
+                    if (konektovaniUređaji[t].length() > 0) {
+                        Log.d(Konstante.BT_TAG, "Grešnik[" + t + "] je: " + konektovaniUređaji[t]);
+                        return true;
+                    }
                 }
             }
         }

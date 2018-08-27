@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 import bluetooth.navira.me.bluetoothskener.model.BlueToothUredjaj;
+import bluetooth.navira.me.bluetoothskener.util.Konstante;
 
 /**
  * Created by Vuk on 29.5.2018..
@@ -39,10 +40,12 @@ public class BlueToothUredjajAdapter extends RecyclerView.Adapter<BlueToothUredj
         this.bluetoothDevices = bluetoothAdapter.getBondedDevices();
         this.povezaniUredjaji = povezaniUredjaji;
 
-        for(int i = 0; i < povezaniUredjaji.length; i++){
-            if(povezaniUredjaji[i] != null){
-                if(povezaniUredjaji[i].length() > 0){
-                    Log.d("BT27", "#3 Uredjaj: " + povezaniUredjaji[i]);
+        if(povezaniUredjaji != null) {
+            for (int i = 0; i < povezaniUredjaji.length; i++) {
+                if (povezaniUredjaji[i] != null) {
+                    if (povezaniUredjaji[i].length() > 0) {
+                        Log.d("BT27", "#3 Uredjaj: " + povezaniUredjaji[i]);
+                    }
                 }
             }
         }
@@ -58,6 +61,7 @@ public class BlueToothUredjajAdapter extends RecyclerView.Adapter<BlueToothUredj
         BtUredjajViewHolder viewHolder = new BtUredjajViewHolder(view);
         return viewHolder;
     }
+
 
     @Override
     public void onBindViewHolder(BtUredjajViewHolder holder, int position){
@@ -81,6 +85,18 @@ public class BlueToothUredjajAdapter extends RecyclerView.Adapter<BlueToothUredj
         return listaUredjaja.get(position);
     }
 
+    public int getPozicijaUredjaja(String naziv){
+        for(int i = 0; i < listaUredjaja.size(); i++){
+            Log.d(Konstante.BT_TAG, "U adapteru: " + listaUredjaja.get(i).getNaziv() + "=" + naziv);
+            if(listaUredjaja.get(i).getNaziv().equals(naziv)){
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+
     private void popuniListu(Set<BluetoothDevice> bluetoothDevices){
         listaUredjaja = new ArrayList<BlueToothUredjaj>();
         listaBluetoothDevices = new ArrayList<BluetoothDevice>();
@@ -92,16 +108,18 @@ public class BlueToothUredjajAdapter extends RecyclerView.Adapter<BlueToothUredj
                 String deviceHardwareAddress = device.getAddress(); // MAC address
                 Log.d("BT27", "Naziv uredjaja: " + deviceName);
                 Log.d("BT27", "MAC Adresa uredjaja: " + deviceHardwareAddress);
-                Log.d("BT27", "Detalji uredjaj1: " + device.getBluetoothClass().getMajorDeviceClass());
-                Log.d("BT27", "Detalji uredjaj2: " + device.getBluetoothClass().getDeviceClass());
+                //Log.d("BT27", "Detalji uredjaj1: " + device.getBluetoothClass().getMajorDeviceClass());
+                //Log.d("BT27", "Detalji uredjaj2: " + device.getBluetoothClass().getDeviceClass());
                 //Log.d("BT27", "Detalji uredjaj2: " + device.getType());
                 final BlueToothUredjaj uredjaj = new BlueToothUredjaj(deviceName, deviceHardwareAddress);
-                for(int j = 0; j < povezaniUredjaji.length; j++){
-                    if(povezaniUredjaji[j] != null) {
-                        Log.d("BT27", povezaniUredjaji[j] + "=" + uredjaj.getNaziv());
-                        if (povezaniUredjaji[j].equals(uredjaj.getNaziv())) {
-                            uredjaj.setStatusVeze(true);
-                            break;
+                if(povezaniUredjaji != null) {
+                    for (int j = 0; j < povezaniUredjaji.length; j++) {
+                        if (povezaniUredjaji[j] != null) {
+                            Log.d("BT27", povezaniUredjaji[j] + "=" + uredjaj.getNaziv());
+                            if (povezaniUredjaji[j].equals(uredjaj.getNaziv())) {
+                                uredjaj.setStatusVeze(true);
+                                break;
+                            }
                         }
                     }
                 }
@@ -124,6 +142,7 @@ public class BlueToothUredjajAdapter extends RecyclerView.Adapter<BlueToothUredj
             lblStatus = (TextView) itemView.findViewById(R.id.lblUredjajStatus);
             itemView.setOnClickListener(this);
         }
+
 
         void bind(int position)  {
             //Ova metoda zapravo povezuje izvoriste podataka sa elementom liste, ali se poziva iz Adaptera na onBindViewHolder
